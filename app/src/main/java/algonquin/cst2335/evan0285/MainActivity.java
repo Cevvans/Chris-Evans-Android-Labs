@@ -2,7 +2,9 @@ package algonquin.cst2335.evan0285;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -23,17 +25,33 @@ public class MainActivity extends AppCompatActivity {
 
         Button loginButton = findViewById(R.id.loginButton);
         EditText editTextEmail = findViewById(R.id.editTextEmail);
+        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        String emailAddress = prefs.getString("LoginName", "");
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editTextEmail.setText(emailAddress);
+
+
+
 
         loginButton.setOnClickListener( clk-> {
             Intent nextPage = new Intent( MainActivity.this, SecondActivity.class);
 
             nextPage.putExtra( "EmailAddress", editTextEmail.getText().toString() );
 
+            editor.putString( "LoginName", editTextEmail.getText().toString());
+            editor.apply();
+
+
             startActivity(nextPage);
 
 
 
         } );
+
+
+
+
 
 
 
