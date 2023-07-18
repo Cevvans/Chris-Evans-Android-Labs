@@ -82,22 +82,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(!foundUpperCase){
-            Toast.makeText(this, "Password is missing an upper case letter", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Password is missing an upper case letter", Toast.LENGTH_SHORT).show();
 
             return false;
         }
         else if(!foundLowerCase){
-            Toast.makeText(this, "Password is missing a lower case letter", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Password is missing a lower case letter", Toast.LENGTH_SHORT).show();
 
             return false;
         }
         else if (!foundNumber){
-            Toast.makeText(this, "Password is missing a number", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Password is missing a number", Toast.LENGTH_SHORT).show();
 
             return false;
         }
         else if (!foundSpecial){
-            Toast.makeText(this, "Password is missing a special character", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Password is missing a special character", Toast.LENGTH_SHORT).show();
 
             return false;
         }

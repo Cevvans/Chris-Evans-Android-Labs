@@ -34,35 +34,13 @@ public class MainActivityTest {
 
     @Test
     public void mainActivityTest() {
-        ViewInteraction appCompatEditText = onView( withId(R.id.editTextText)  );
-
-
+        ViewInteraction appCompatEditText = onView( withId(R.id.editTextText));
         appCompatEditText.perform(replaceText("12345"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.editTextText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatEditText2.perform(pressImeActionButton());
-
-        ViewInteraction materialButton = onView(
-                allOf(withId(R.id.button), withText("LOGIN"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+        ViewInteraction materialButton = onView( withId(R.id.button));
         materialButton.perform(click());
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.textView),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
+        ViewInteraction textView = onView( withId(R.id.textView));
         textView.check(matches(withText("You shall not pass!")));
     }
 
@@ -104,7 +82,7 @@ public class MainActivityTest {
 
         ViewInteraction appCompatEditText = onView( withId(R.id.editTextText));
 
-        appCompatEditText.perform(replaceText("passsWithoutDigit"));
+        appCompatEditText.perform(replaceText("passWithoutDigit"));
 
         ViewInteraction materialButton = onView(withId(R.id.button));
         materialButton.perform(click());
