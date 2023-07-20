@@ -47,10 +47,12 @@ public class ChatRoom extends AppCompatActivity {
             itemView.setOnClickListener(clk -> {
 
                 int position = getAbsoluteAdapterPosition();
+                ChatMessage selected = messages.get(position);
+
+                chatmodel.selectedMessage.postValue(selected);
 
 
-
-
+                /*
                 AlertDialog.Builder builder = new AlertDialog.Builder( ChatRoom.this );
                 builder.setMessage("Do you want to delete the message: " + messageText.getText())
                     .setTitle("Question")
@@ -81,7 +83,7 @@ public class ChatRoom extends AppCompatActivity {
                     }).show();
                 })
                 .create().show();
-
+*/
             });
             messageText = itemView.findViewById(R.id.message);
             timeText = itemView.findViewById(R.id.time);
