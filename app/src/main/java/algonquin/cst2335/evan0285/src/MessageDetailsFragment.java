@@ -18,7 +18,7 @@ public class MessageDetailsFragment extends Fragment {
     public MessageDetailsFragment(ChatMessage m){
         selected  = m;
     }
-    @Nullable
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);

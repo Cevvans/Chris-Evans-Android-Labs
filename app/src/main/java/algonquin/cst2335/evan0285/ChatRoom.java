@@ -115,7 +115,9 @@ public class ChatRoom extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        if (chatmodel == null) {
+            chatmodel = new ViewModelProvider(this).get(ChatRoomViewModel.class);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
         binding = ActivityChatRoomBinding.inflate(getLayoutInflater());
@@ -124,15 +126,11 @@ public class ChatRoom extends AppCompatActivity {
 
          chatmodel.selectedMessage.observe(this, (newMessageValue) ->{
             MessageDetailsFragment chatFragment = new MessageDetailsFragment(newMessageValue);
-//            chatFragment.displayMessage(newMessageValue);
-//            getFragmentManager().beginTransaction().replace(R.id.frameLayout, chatFragment).commit();
+             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, chatFragment).commit();
 
-            getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, chatFragment).commit();
-            /*chatFragment.displayMessage(newMessageValue);
-            FragmentManager fMgr = getSupportFragmentManager();
-            FragmentTransaction tx = fMgr.beginTransaction();
-            tx.add(R.id.frameLayout, chatFragment);
-            */
+
+
+
 
         });
 
