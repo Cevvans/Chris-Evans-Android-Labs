@@ -2,6 +2,8 @@ package algonquin.cst2335.evan0285;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,7 @@ import algonquin.cst2335.evan0285.src.ChatMessage;
 import algonquin.cst2335.evan0285.src.ChatMessageDAO;
 import algonquin.cst2335.evan0285.src.ChatRoomViewModel;
 import algonquin.cst2335.evan0285.src.MessageDatabase;
+import algonquin.cst2335.evan0285.src.MessageDetailsFragment;
 
 
 public class ChatRoom extends AppCompatActivity {
@@ -40,6 +43,8 @@ public class ChatRoom extends AppCompatActivity {
 
         MessageDatabase db = Room.databaseBuilder(getApplicationContext(), MessageDatabase.class, "database-name").build();
         ChatMessageDAO mDAO = db.cmDAO();
+
+
 
         public MyRowHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,13 +111,28 @@ public class ChatRoom extends AppCompatActivity {
     ArrayList<ChatMessage> messages = new ArrayList<>();
 
     private RecyclerView.Adapter myAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
         binding = ActivityChatRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        chatmodel.selectedMessage.observe(this, (newMessageValue) ->{
+
+
+         chatmodel.selectedMessage.observe(this, (newMessageValue) ->{
+            MessageDetailsFragment chatFragment = new MessageDetailsFragment(newMessageValue);
+//            chatFragment.displayMessage(newMessageValue);
+//            getFragmentManager().beginTransaction().replace(R.id.frameLayout, chatFragment).commit();
+
+            getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, chatFragment).commit();
+            /*chatFragment.displayMessage(newMessageValue);
+            FragmentManager fMgr = getSupportFragmentManager();
+            FragmentTransaction tx = fMgr.beginTransaction();
+            tx.add(R.id.frameLayout, chatFragment);
+            */
 
         });
 
