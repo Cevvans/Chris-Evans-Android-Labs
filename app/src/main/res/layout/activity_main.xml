@@ -67,11 +67,7 @@
         android:text="visibility goes here"
         android:visibility="invisible"/>
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:visibility="invisible"/>
+
 
     <TextView
         android:id="@+id/description"
@@ -79,6 +75,12 @@
         android:layout_height="wrap_content"
         android:text="Description goes here"
         android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:visibility="invisible"/>
 
 
 </LinearLayout>

@@ -121,19 +121,9 @@ public class MainActivity extends AppCompatActivity {
                                 binding.visibility.setText("The visibility is " + vis);
                                 binding.visibility.setVisibility(View.VISIBLE);
 
-                                binding.minTemp.setText(description);
-                                binding.minTemp.setVisibility(View.VISIBLE);
+                                binding.description.setText("The day is going to be: " + description);
+                                binding.description.setVisibility(View.VISIBLE);
 
-
-//                                binding.icon.setImageBitmap();
-//                                binding.icon.setVisibility(View.VISIBLE);
-
-
-
-
-
-
-                                // do this for all the textViews...
 
                             });
 
