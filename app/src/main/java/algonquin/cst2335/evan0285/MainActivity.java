@@ -3,11 +3,32 @@ package algonquin.cst2335.evan0285;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.net.URLEncoder;
+
+import algonquin.cst2335.evan0285.databinding.ActivityMainBinding;
 
 /**
  * @author Chris Evans
@@ -16,116 +37,117 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * this holds the text at the centre of the screen
-     */
-    private TextView tv = null;
-    /**
-     * this holds the edit text
-     */
-    private EditText et = null;
-    /**
-     * this holds the button
-     */
-    private Button btn = null;
 
-    @SuppressLint("SetTextI18n")
+    protected String cityName;
+    protected RequestQueue queue = null;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        queue = Volley.newRequestQueue(this);
 
-        TextView tv = findViewById(R.id.textView);
-        EditText et = findViewById(R.id.editTextText);
-        Button btn = findViewById(R.id.button);
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(  binding.getRoot()  );
+        binding.getForecast.setOnClickListener(click -> {
+            cityName = binding.editText.getText().toString();
+            String stringURL = "https://api.openweathermap.org/data/2.5/weather?q="
+                    + URLEncoder.encode(cityName)
+                    + "&appid=2c84169e5f2fcb3daa042006f47a5820&units=metric";
 
 
-        btn.setOnClickListener( clk ->{
-            String password = et.getText().toString();
-            if(checkPasswordComplexity( password )){
-                tv.setText("Your password meets the requirements");
-            }
-            else{
-                tv.setText("You shall not pass!");
-            }
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, stringURL, null,
+                    (response) -> {
+                        try {
+                            JSONObject coord = response.getJSONObject( "coord" );
 
+                            JSONObject mainObject = response.getJSONObject( "main" );
+                            double current = mainObject.getDouble("temp");
+                            double min = mainObject.getDouble("temp_min");
+                            double max = mainObject.getDouble("temp_max");
+                            int humidity = mainObject.getInt("humidity");
+
+
+                            JSONArray weatherArray = response.getJSONArray ( "weather" );
+
+
+                            JSONObject position0 = weatherArray.getJSONObject(0);
+
+                            String description = position0.getString("description");
+                            String iconName = position0.getString("icon");
+                            int vis = response.getInt("visibility");
+                            String name = response.getString( "name" );
+
+                            String imageUrl = "https://openweathermap.org/img/w/" + iconName + ".png";
+                            ImageRequest imgReq = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
+                                @Override
+                                public void onResponse(Bitmap response) {
+                                    binding.icon.setImageBitmap(response);
+                                    binding.icon.setVisibility(View.VISIBLE);
+
+
+                                }
+                            }, 1024, 1024, ImageView.ScaleType.CENTER, null, (error ) -> {
+
+                            });
+//                            FileOutputStream fOut = null;
+//                            try {
+//                                fOut = openFileOutput( iconName + ".png", Context.MODE_PRIVATE);
+//
+//                                image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+//                                fOut.flush();
+//                                fOut.close();
+//                            } catch (FileNotFoundException e) {
+//                                e.printStackTrace();
+//
+//                            }
+                            queue.add(imgReq);
+
+                            runOnUiThread( (  )  -> {
+
+                                binding.temp.setText("The current temperature is " + current);
+                                binding.temp.setVisibility(View.VISIBLE);
+
+                                binding.minTemp.setText("The min temperature is " + min);
+                                binding.minTemp.setVisibility(View.VISIBLE);
+
+                                binding.maxTemp.setText("The max temperature is " + max);
+                                binding.maxTemp.setVisibility(View.VISIBLE);
+
+                                binding.humidity.setText("The humidity is " + humidity);
+                                binding.humidity.setVisibility(View.VISIBLE);
+
+                                binding.visibility.setText("The visibility is " + vis);
+                                binding.visibility.setVisibility(View.VISIBLE);
+
+                                binding.minTemp.setText(description);
+                                binding.minTemp.setVisibility(View.VISIBLE);
+
+
+//                                binding.icon.setImageBitmap();
+//                                binding.icon.setVisibility(View.VISIBLE);
+
+
+
+
+
+
+                                // do this for all the textViews...
+
+                            });
+
+
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    },
+                    (error) -> {int i = 0;});
+            queue.add(request);
 
         });
 
-    }
-    /**
-     *  This function checks password validity
-     * @param pw the string object we are checking
-     * @return Returns true if password matches validity requirements
-     */
-    boolean checkPasswordComplexity(String pw){
-        boolean foundUpperCase = false;
-        boolean foundLowerCase = false;
-        boolean foundNumber = false;
-        boolean foundSpecial = false;
 
-        for(int i = 0; i < pw.length(); i++){
-            char c = pw.charAt(i);
-
-            if(Character.isUpperCase(c)){
-                foundUpperCase = true;
-            }
-            else if(Character.isLowerCase(c)){
-                foundLowerCase = true;
-            }
-            else if(Character.isDigit(c)){
-                foundNumber = true;
-            }
-            else if(isSpecialCharacter(c)){
-                foundSpecial = true;
-            }
-        }
-
-        if(!foundUpperCase){
-            Toast.makeText(this, "Password is missing an upper case letter", Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
-        else if(!foundLowerCase){
-            Toast.makeText(this, "Password is missing a lower case letter", Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
-        else if (!foundNumber){
-            Toast.makeText(this, "Password is missing a number", Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
-        else if (!foundSpecial){
-            Toast.makeText(this, "Password is missing a special character", Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
-        else{
-            return true;
-        }
-
-
-
-    }
-    /**
-     * method to check if char is special char
-     * @param c
-     * @return boolean value
-     */
-    boolean isSpecialCharacter(char c){
-        switch (c){
-            case '#':
-            case '?':
-            case '*':
-            case '$':
-            case '%':
-            case '^':
-            case '!':
-            case '@':
-                return true;
-            default:
-                return false;
-        }
     }
 }
